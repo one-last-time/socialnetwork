@@ -1,0 +1,38 @@
+{% extends 'account/base.html' %}
+{% block content1%}
+<title>Register</title>
+{% endblock %}
+{% block content2 %}
+
+<form action="{% url 'account:register' %}" method="POST">
+    {% csrf_token %}
+ <div>   
+<label for ='first_name'>First name</label>
+<input type="text" name="first_name">
+<label for ='last_name'>Last name</label>
+<input type="text" name="last_name">
+<div>
+<label for ='username'>Username</label>
+<input type="text" name="username">       
+<label for ='email'>Email</label>
+<input type="email" name="email" placeholder="">
+</div>
+<div>
+<label for = 'password1'>Password</label>
+<input type="password" name="password1">
+<label for = 'password2'>Confirm Password</label>
+<input type="password" name="password2">
+</div>
+<div>
+<input type="submit">
+</div>
+</form>
+{% if messages %}
+<ul class="messages">
+    {% for message in messages %}
+      <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+    {% endfor %}
+</ul>
+{% endif %}
+
+{% endblock %}

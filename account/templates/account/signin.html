@@ -1,0 +1,25 @@
+{% extends 'account/base.html' %}
+{% block content1%}
+<title>Sign-in</title>
+{% endblock %}
+
+{% block content2 %}
+
+<form action="{% url 'account:signin' %}" method="POST">
+{% csrf_token %}
+<label for ='email'>Email</label>
+<input type="email" name="email" placeholder="">
+<label for = 'password'>Password</label>
+<input type="password" name="password">
+<input type="submit">
+</form>
+<a href="{% url 'account:register' %}">Create account</a> 
+{% if messages %}
+<ul class="messages">
+    {% for message in messages %}
+      <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+    {% endfor %}
+</ul>
+{% endif %}
+
+{% endblock %}
