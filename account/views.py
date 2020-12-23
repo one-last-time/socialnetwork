@@ -4,8 +4,8 @@ from django.urls import reverse
 from django.views import generic
 from django.utils.text import slugify
 from django.utils import timezone
-from django.contrib.auth.models import User
-from django.contrib.auth import authenticate,login
+from account.models import Account
+from django.contrib.auth import authenticate,login,logout
 from django.contrib import messages
 
 # Create your views here.
@@ -25,14 +25,14 @@ def register(request):
                 messages : messages
             }
             return render(request, template_name='account/register.html',context=context)
-        elif User.objects.filter(email=email).exists():
+        elif Account.objects.filter(email=email).exists():
             messages.info(request, 'Email already exists')
             context = {
                 messages : messages
             }
             return render(request, template_name='account/register.html',context=context)
         else:
-            user = User.objects.create_user(first_name=first_name,last_name=last_name,username=username,email=email,password=password1)
+            user = Account.objects.create_user(first_name=first_name,last_name=last_name,username=username,email=email,password=password1)
             user.save()
             return HttpResponseRedirect(reverse('account:signin'))
     else:
@@ -45,18 +45,21 @@ def signin(request):
         email = request.POST['email']
         password = request.POST['password']
         user =  authenticate(email=email,password=password)
+        print('Trying to authenticate')
         print(user)
         if user is not None:
             login(request,user)
             context = {
                 user : user
             }
+            print('authentication success')
             return render(request, template_name='account/home.html', context=context)
         else:
             messages.info(request, 'Incorrect Email or password')
             context = {
                 messages : messages
             }
+            print('authentication failed')
             return render(request, template_name='account/signin.html',context=context)
     else:
         return render(request, template_name= 'account/signin.html')
@@ -65,7 +68,9 @@ def signin(request):
     
 
 def signout(request):
-    pass
+    logout(request)
+    return HttpResponseRedirect(reverse('account:signin'))
+    
 
 def home(request):
     pass

@@ -1,2 +1,6 @@
 {% extends 'account/base.html' %}
+{% csrf_token %}
+{% block content2 %}
 <h1>welcome {{user.username}}</h1>
+<p><a href="{% url 'account:signout' %}">Sign Out</a></p>
+{% endblock %}

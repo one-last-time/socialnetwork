@@ -17,11 +17,13 @@ class MyAccountManager(BaseUserManager):
             username = username,
             first_name=first_name,
             last_name=last_name,
+            
         )
         user.set_password(password)
         user.save(using=self.db)
         return user
     def create_superuser(self, email, username,first_name,last_name, password,**other_fields):
+        print('super user is called')
         user = self.create_user(
             email=self.normalize_email(email),
             password=password,
@@ -30,7 +32,10 @@ class MyAccountManager(BaseUserManager):
             last_name=last_name,
         )
         user.is_admin=True
-        user.is_stuff = True
+        user.is_staff = True
+        user.is_superuser = True
+        user.save(using=self.db)
+        return user
         
 
 
@@ -42,11 +47,13 @@ class Account(AbstractBaseUser):
     date_joined = models.DateTimeField(verbose_name='date joined',auto_now_add=True)
     last_active = models.DateTimeField(verbose_name='last login', auto_now=True)
     is_admin=models.BooleanField(default=False)
-    is_stuff = models.BooleanField(default=False)
+    is_staff = models.BooleanField(default=False)
     is_superuser = models.BooleanField(default=False) 
     
+    objects = MyAccountManager()
+    
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['username','email','first_name','last_name']
+    REQUIRED_FIELDS = ['username','first_name','last_name']
     
     def __str__(self):
         return self.email+" "+self.username
